@@ -1,3 +1,6 @@
+//https://www.highcharts.com/demo/column-basic
+
+
 Highcharts.chart('container', {
     chart: {
         plotBackgroundColor: null,
