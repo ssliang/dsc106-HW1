@@ -1,0 +1,137 @@
+<!--BORROWED FROM https://www.d3-graph-gallery.com/graph/pie_annotation.html -->
+
+<html> 
+    <head>
+        <title>D3 Pie Chart</title>
+    </head>
+    <body>
+        <h1> D3 Pie Chart </h1>
+        
+        <h2> <i><small>UCSD Enrollment for 2018</small></i></h2>
+
+        <!DOCTYPE html>
+        <meta charset="utf-8">
+
+        <!-- Load d3.js -->
+        <script src="https://d3js.org/d3.v4.js"></script>
+        <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+
+
+        <!------------------------------------------------------------- FIRST PIE CHART ----------------------------------------------------------------------->
+        <!-- Create a div where the graph will take place -->
+        <svg width="1000" height="1000" id="my_dataviz1"></svg>
+
+      
+
+        <!-- Color scale -->
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+        <script>
+
+        // set the dimensions and margins of the graph
+        var width = 450
+            height = 450
+            margin = 40
+
+        // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
+        var radius = Math.min(width, height) / 2 - margin
+
+        // append the svg object to the div called 'my_dataviz'
+        var svg = d3.select("#my_dataviz1")
+        .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+        .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        var data = {Men: 45636, Women: 52265}
+
+        // set the color scale
+        var color = d3.scaleOrdinal()
+        .domain(data)
+        .range(d3.schemeSet2);
+
+        // Compute the position of each group on the pie:
+        var pie = d3.pie()
+        .value(function(d) {return d.value; })
+        var data_ready = pie(d3.entries(data))
+        // Now I know that group A goes from 0 degrees to x degrees and so on.
+
+        // shape helper to build arcs:
+        var arcGenerator = d3.arc()
+        .innerRadius(0)
+        .outerRadius(radius)
+
+        // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+        svg
+        .selectAll('mySlices')
+        .data(data_ready)
+        .enter()
+        .append('path')
+            .attr('d', arcGenerator)
+            .attr('fill', function(d){ return(color(d.data.key)) })
+            .attr("stroke", "black")
+            .style("stroke-width", "2px")
+            .style("opacity", 0.7)
+
+        // Now add the annotation. Use the centroid method to get the best coordinates
+        svg
+        .selectAll('mySlices')
+        .data(data_ready)
+        .enter()
+        .append('text')
+        .text(function(d){ return d.data.key})
+        .attr("transform", function(d) { return "translate(" + arcGenerator.centroid(d) + ")";  })
+        .style("text-anchor", "middle")
+        .style("font-size", 15)
+    
+
+        const annotations = [
+            {
+                note: {
+                    title: "53.4%"
+                },
+                x: 405,
+                y: 250,
+                dy: 100,
+                dx: 100
+            }
+        ]
+
+        // Add annotation to the chart
+        const makeAnnotations = d3.annotation()
+            .annotations(annotations)
+        d3.select("#my_dataviz1")
+            .append("g")
+            .call(makeAnnotations)
+
+
+            
+       </script>
+
+       <script>
+         const annotations2 = [
+            {
+                note: {
+                    title: "46.6%"
+                },
+                x: 155,
+                y: 400,
+                dy: 100,
+                dx: 100
+            }
+        ]
+
+        // Add annotation to the chart
+        const makeAnnotations2 = d3.annotation()
+            .annotations(annotations2)
+        d3.select("#my_dataviz1")
+            .append("g")
+            .call(makeAnnotations2)
+      
+
+       
+       </script>
+
+    </body>
+</html>
